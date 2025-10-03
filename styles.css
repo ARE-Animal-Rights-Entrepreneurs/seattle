@@ -6,16 +6,21 @@
 }
 
 :root {
-    --primary-color: #2d5a3d;
-    --primary-light: #4a8c5f;
-    --primary-dark: #1a3d2a;
-    --accent-color: #f4a261;
-    --text-dark: #2b2b2b;
+    --primary-color: #1e4d2b;
+    --primary-light: #2d7a3e;
+    --primary-dark: #0f2515;
+    --accent-color: #ff6b35;
+    --accent-light: #ff8c61;
+    --text-dark: #1a1a1a;
     --text-light: #ffffff;
-    --bg-light: #f8f9fa;
+    --bg-light: #f5f7fa;
     --bg-white: #ffffff;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+    --bg-cream: #faf8f5;
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.18);
+    --border-radius: 16px;
+    --border-radius-lg: 24px;
 }
 
 html {
@@ -23,10 +28,12 @@ html {
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: var(--text-dark);
     background-color: var(--bg-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
@@ -37,12 +44,15 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--primary-color) 100%);
     color: var(--text-light);
-    padding: 120px 20px 100px;
+    padding: 160px 20px 140px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
 }
 
 .hero::before {
@@ -52,8 +62,20 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>');
-    opacity: 0.3;
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    opacity: 0.6;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--bg-white));
 }
 
 .hero .container {
@@ -62,150 +84,248 @@ body {
 }
 
 .hero-title {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: -1px;
+    font-size: 4.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    letter-spacing: -2px;
     animation: fadeInUp 0.8s ease-out;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .hero-subtitle {
-    font-size: 1.8rem;
-    font-weight: 300;
-    margin-bottom: 20px;
+    font-size: 2.2rem;
+    font-weight: 400;
+    margin-bottom: 30px;
     opacity: 0.95;
     animation: fadeInUp 0.8s ease-out 0.2s both;
+    letter-spacing: 0.5px;
 }
 
 .hero-description {
-    font-size: 1.2rem;
-    max-width: 700px;
-    margin: 0 auto 40px;
-    opacity: 0.9;
-    line-height: 1.7;
+    font-size: 1.35rem;
+    max-width: 750px;
+    margin: 0 auto 50px;
+    opacity: 0.95;
+    line-height: 1.8;
     animation: fadeInUp 0.8s ease-out 0.4s both;
+    font-weight: 300;
 }
 
 /* Buttons */
 .cta-button {
     display: inline-block;
-    padding: 16px 40px;
-    background-color: var(--accent-color);
-    color: var(--text-dark);
+    padding: 18px 48px;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-light) 100%);
+    color: var(--text-light);
     text-decoration: none;
     border-radius: 50px;
-    font-weight: 600;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow);
+    font-weight: 700;
+    font-size: 1.15rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(255, 107, 53, 0.3);
     animation: fadeInUp 0.8s ease-out 0.6s both;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.cta-button:hover::before {
+    left: 100%;
 }
 
 .cta-button:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    background-color: #e89550;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 32px rgba(255, 107, 53, 0.4);
 }
 
 .cta-button.primary {
-    background-color: var(--text-light);
+    background: var(--text-light);
     color: var(--primary-color);
-    font-size: 1.2rem;
-    padding: 18px 50px;
+    font-size: 1.3rem;
+    padding: 20px 60px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
 }
 
 .cta-button.primary:hover {
-    background-color: var(--bg-light);
+    background: var(--bg-cream);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
 }
 
 /* About Section */
 .about {
-    padding: 80px 20px;
-    background-color: var(--bg-white);
+    padding: 100px 20px;
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-cream) 100%);
     text-align: center;
 }
 
 .about h2 {
-    font-size: 2.5rem;
-    margin-bottom: 30px;
+    font-size: 3rem;
+    margin-bottom: 35px;
     color: var(--primary-color);
+    font-weight: 700;
+    letter-spacing: -1px;
+    position: relative;
+    display: inline-block;
+}
+
+.about h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+    border-radius: 2px;
 }
 
 .about p {
-    font-size: 1.2rem;
-    max-width: 800px;
+    font-size: 1.25rem;
+    max-width: 850px;
     margin: 0 auto;
-    line-height: 1.8;
+    margin-top: 30px;
+    line-height: 1.9;
     color: var(--text-dark);
+    font-weight: 400;
 }
 
 /* Projects Section */
 .projects {
-    padding: 80px 20px;
-    background-color: var(--bg-light);
+    padding: 100px 20px 120px;
+    background: var(--bg-cream);
 }
 
 .projects h2 {
-    font-size: 2.5rem;
-    margin-bottom: 60px;
+    font-size: 3rem;
+    margin-bottom: 70px;
     text-align: center;
     color: var(--primary-color);
+    font-weight: 700;
+    letter-spacing: -1px;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.projects h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+    border-radius: 2px;
 }
 
 .project-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 40px;
-    margin-top: 40px;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 35px;
+    margin-top: 50px;
 }
 
 .project-card {
     background: var(--bg-white);
-    padding: 40px 30px;
-    border-radius: 12px;
-    box-shadow: var(--shadow);
-    transition: all 0.3s ease;
+    padding: 45px 35px;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+    transform: scaleX(0);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.project-card:hover::before {
+    transform: scaleX(1);
 }
 
 .project-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-12px);
     box-shadow: var(--shadow-lg);
+    border-color: rgba(255, 107, 53, 0.1);
 }
 
 .project-icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
+    font-size: 3.5rem;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .project-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
+    font-size: 1.65rem;
+    margin-bottom: 16px;
     color: var(--primary-color);
+    font-weight: 700;
 }
 
 .project-card p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #666;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #555;
 }
 
 /* Meetings Section */
 .meetings {
-    padding: 80px 20px;
-    background-color: var(--bg-white);
+    padding: 100px 20px;
+    background: linear-gradient(180deg, var(--bg-white) 0%, var(--bg-light) 100%);
 }
 
 .meetings h2 {
-    font-size: 2.5rem;
-    margin-bottom: 40px;
+    font-size: 3rem;
+    margin-bottom: 50px;
     text-align: center;
     color: var(--primary-color);
+    font-weight: 700;
+    letter-spacing: -1px;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.meetings h2::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-color), var(--accent-light));
+    border-radius: 2px;
 }
 
 .meeting-info {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
+    margin-top: 40px;
     text-align: center;
 }
 
@@ -213,60 +333,96 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    background: var(--bg-light);
-    padding: 30px;
-    border-radius: 12px;
-    margin-bottom: 30px;
+    gap: 28px;
+    background: var(--bg-white);
+    padding: 40px;
+    border-radius: var(--border-radius-lg);
+    margin-bottom: 35px;
+    box-shadow: var(--shadow);
+    border: 2px solid rgba(255, 107, 53, 0.1);
+    transition: all 0.3s ease;
+}
+
+.meeting-detail:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
 }
 
 .meeting-icon {
-    font-size: 3rem;
+    font-size: 3.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
 }
 
 .meeting-detail h3 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--primary-color);
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
 .meeting-detail p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #666;
+    font-weight: 500;
 }
 
 .meeting-description {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    font-size: 1.15rem;
+    line-height: 1.8;
     color: var(--text-dark);
+    font-weight: 400;
 }
 
 /* CTA Section */
 .cta {
-    padding: 100px 20px;
-    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%);
+    padding: 120px 20px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--primary-color) 100%);
     color: var(--text-light);
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
+}
+
+.cta > .container {
+    position: relative;
+    z-index: 1;
 }
 
 .cta h2 {
-    font-size: 2.5rem;
-    margin-bottom: 20px;
+    font-size: 3.2rem;
+    margin-bottom: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .cta p {
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    max-width: 600px;
+    font-size: 1.3rem;
+    margin-bottom: 45px;
+    max-width: 650px;
     margin-left: auto;
     margin-right: auto;
     opacity: 0.95;
+    line-height: 1.7;
+    font-weight: 300;
 }
 
 .cta-note {
-    margin-top: 20px;
-    font-size: 0.9rem;
-    opacity: 0.8;
+    margin-top: 24px;
+    font-size: 0.95rem;
+    opacity: 0.75;
     font-style: italic;
 }
 
@@ -274,13 +430,14 @@ body {
 footer {
     background-color: var(--primary-dark);
     color: var(--text-light);
-    padding: 30px 20px;
+    padding: 40px 20px;
     text-align: center;
 }
 
 footer p {
-    font-size: 0.95rem;
-    opacity: 0.9;
+    font-size: 1rem;
+    opacity: 0.85;
+    font-weight: 300;
 }
 
 /* Animations */
@@ -297,23 +454,32 @@ footer p {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .hero {
+        min-height: 80vh;
+        padding: 120px 20px 100px;
+    }
+
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 3rem;
+        letter-spacing: -1px;
     }
 
     .hero-subtitle {
-        font-size: 1.4rem;
+        font-size: 1.6rem;
     }
 
     .hero-description {
-        font-size: 1rem;
+        font-size: 1.1rem;
     }
 
     .about h2,
     .projects h2,
-    .meetings h2,
+    .meetings h2 {
+        font-size: 2.3rem;
+    }
+
     .cta h2 {
-        font-size: 2rem;
+        font-size: 2.5rem;
     }
 
     .project-grid {
@@ -324,39 +490,59 @@ footer p {
     .meeting-detail {
         flex-direction: column;
         text-align: center;
+        padding: 35px 25px;
     }
 
     .cta-button {
-        padding: 14px 30px;
-        font-size: 1rem;
+        padding: 16px 36px;
+        font-size: 1.05rem;
     }
 
     .cta-button.primary {
-        font-size: 1.1rem;
-        padding: 16px 40px;
+        font-size: 1.2rem;
+        padding: 18px 45px;
     }
 }
 
 @media (max-width: 480px) {
     .hero {
-        padding: 80px 20px 60px;
+        padding: 100px 20px 80px;
+        min-height: 75vh;
     }
 
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
     }
 
     .hero-subtitle {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
     }
 
     .about,
     .projects,
     .meetings {
-        padding: 60px 20px;
+        padding: 70px 20px;
+    }
+
+    .about h2,
+    .projects h2,
+    .meetings h2 {
+        font-size: 2rem;
     }
 
     .cta {
-        padding: 80px 20px;
+        padding: 90px 20px;
+    }
+
+    .cta h2 {
+        font-size: 2rem;
+    }
+
+    .project-card {
+        padding: 35px 25px;
     }
 }
