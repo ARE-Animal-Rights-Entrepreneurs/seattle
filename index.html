@@ -15,7 +15,12 @@
     <section class="hero">
         <div class="container">
             <h1 class="hero-title">Animal Rights Entrepreneurs</h1>
-            <p class="hero-subtitle">Seattle</p>
+            <p class="hero-subtitle">
+                <span class="location-badge">
+                    <span class="globe-icon">🌍</span>
+                    The Seattle Chapter
+                </span>
+            </p>
             <p class="hero-description">A community of innovators working to advance animal welfare through technology, outreach, and social change.</p>
             <a href="#join" class="cta-button">Join Our Community</a>
         </div>
@@ -33,23 +38,53 @@
     <section class="projects">
         <div class="container">
             <h2>Our Projects</h2>
-            <div class="project-grid">
-                <div class="project-card">
-                    <div class="project-icon">📱</div>
-                    <h3>Social Media Outreach</h3>
-                    <p>Amplifying animal welfare messages and reaching new audiences through strategic digital campaigns.</p>
+            <div class="carousel-container">
+                <button class="carousel-btn prev" aria-label="Previous projects">‹</button>
+                <div class="project-carousel">
+                    <div class="project-card">
+                        <div class="project-icon">📱</div>
+                        <h3>Social Media Outreach</h3>
+                        <p>Amplifying animal welfare messages and reaching new audiences through strategic digital campaigns.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">🧬</div>
+                        <h3>Precision Fermentation</h3>
+                        <p>Developing animal-free whey through cutting-edge biotechnology to create sustainable alternatives.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">🌐</div>
+                        <h3>Movement Building Platforms</h3>
+                        <p>Creating web platforms that connect people to social movements and drive collective action.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">🎓</div>
+                        <h3>Educational Resources</h3>
+                        <p>Building comprehensive learning materials to educate the public about animal welfare and ethical choices.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">🤝</div>
+                        <h3>Community Partnerships</h3>
+                        <p>Collaborating with local organizations and businesses to expand our impact and reach.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">📊</div>
+                        <h3>Impact Analytics</h3>
+                        <p>Developing data-driven tools to measure and optimize the effectiveness of animal advocacy campaigns.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">🎨</div>
+                        <h3>Creative Campaigns</h3>
+                        <p>Designing compelling visual and multimedia content to inspire action for animal rights.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-icon">💡</div>
+                        <h3>Innovation Labs</h3>
+                        <p>Experimenting with emerging technologies to find new solutions for animal welfare challenges.</p>
+                    </div>
                 </div>
-                <div class="project-card">
-                    <div class="project-icon">🧬</div>
-                    <h3>Precision Fermentation</h3>
-                    <p>Developing animal-free whey through cutting-edge biotechnology to create sustainable alternatives.</p>
-                </div>
-                <div class="project-card">
-                    <div class="project-icon">🌐</div>
-                    <h3>Movement Building Platforms</h3>
-                    <p>Creating web platforms that connect people to social movements and drive collective action.</p>
-                </div>
+                <button class="carousel-btn next" aria-label="Next projects">›</button>
             </div>
+            <div class="carousel-dots"></div>
         </div>
     </section>
 
@@ -104,6 +139,58 @@
                 }
             });
         });
+
+        // Project Carousel
+        const carousel = document.querySelector('.project-carousel');
+        const cards = document.querySelectorAll('.project-card');
+        const dotsContainer = document.querySelector('.carousel-dots');
+        const prevBtn = document.querySelector('.carousel-btn.prev');
+        const nextBtn = document.querySelector('.carousel-btn.next');
+
+        let currentIndex = 0;
+        const cardsPerView = window.innerWidth > 1024 ? 3 : window.innerWidth > 768 ? 2 : 1;
+        const totalPages = Math.ceil(cards.length / cardsPerView);
+
+        // Create dots
+        for (let i = 0; i < totalPages; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('carousel-dot');
+            dot.setAttribute('aria-label', `Go to page ${i + 1}`);
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToPage(i));
+            dotsContainer.appendChild(dot);
+        }
+
+        const dots = document.querySelectorAll('.carousel-dot');
+
+        function updateCarousel() {
+            const cardWidth = cards[0].offsetWidth;
+            const gap = 35;
+            const offset = currentIndex * (cardsPerView * (cardWidth + gap));
+            carousel.style.transform = `translateX(-${offset}px)`;
+
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        }
+
+        function goToPage(index) {
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        prevBtn.addEventListener('click', () => {
+            currentIndex = currentIndex > 0 ? currentIndex - 1 : totalPages - 1;
+            updateCarousel();
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentIndex = currentIndex < totalPages - 1 ? currentIndex + 1 : 0;
+            updateCarousel();
+        });
+
+        // Update on window resize
+        window.addEventListener('resize', updateCarousel);
     </script>
 </body>
 </html>
