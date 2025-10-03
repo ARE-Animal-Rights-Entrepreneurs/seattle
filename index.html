@@ -38,9 +38,9 @@
     <section class="projects">
         <div class="container">
             <h2>Our Projects</h2>
-            <div class="carousel-container">
-                <button class="carousel-btn prev" aria-label="Previous projects">‹</button>
-                <div class="project-carousel">
+        </div>
+        <div class="carousel-container">
+            <div class="project-carousel">
                     <div class="project-card">
                         <div class="project-icon">📱</div>
                         <h3>Social Media Outreach</h3>
@@ -82,10 +82,7 @@
                         <p>Experimenting with emerging technologies to find new solutions for animal welfare challenges.</p>
                     </div>
                 </div>
-                <button class="carousel-btn next" aria-label="Next projects">›</button>
             </div>
-            <div class="carousel-dots"></div>
-        </div>
     </section>
 
     <!-- Meetings Section -->
@@ -140,57 +137,195 @@
             });
         });
 
-        // Project Carousel
+        // Project Carousel - Infinite Loop with 3 Cards Visible
+        const carouselContainer = document.querySelector('.carousel-container');
         const carousel = document.querySelector('.project-carousel');
-        const cards = document.querySelectorAll('.project-card');
-        const dotsContainer = document.querySelector('.carousel-dots');
-        const prevBtn = document.querySelector('.carousel-btn.prev');
-        const nextBtn = document.querySelector('.carousel-btn.next');
+        const originalCards = Array.from(document.querySelectorAll('.project-card'));
 
         let currentIndex = 0;
-        const cardsPerView = window.innerWidth > 1024 ? 3 : window.innerWidth > 768 ? 2 : 1;
-        const totalPages = Math.ceil(cards.length / cardsPerView);
+        let isDragging = false;
+        let startX = 0;
+        let currentTranslate = 0;
+        let prevTranslate = 0;
+        let animationID = 0;
+        let isTransitioning = false;
 
-        // Create dots
-        for (let i = 0; i < totalPages; i++) {
-            const dot = document.createElement('button');
-            dot.classList.add('carousel-dot');
-            dot.setAttribute('aria-label', `Go to page ${i + 1}`);
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToPage(i));
-            dotsContainer.appendChild(dot);
+        // Clone cards for infinite loop (3 sets: before, original, after)
+        const clonedBefore = originalCards.map(card => card.cloneNode(true));
+        const clonedAfter = originalCards.map(card => card.cloneNode(true));
+
+        // Insert clones in reverse order to maintain correct sequence
+        clonedBefore.reverse().forEach(card => carousel.insertBefore(card, carousel.firstChild));
+        clonedAfter.forEach(card => carousel.appendChild(card));
+
+        const allCards = carousel.querySelectorAll('.project-card');
+        const totalOriginalCards = originalCards.length;
+
+        // Start at the first original card (after the cloned set)
+        currentIndex = totalOriginalCards;
+
+        function getCardWidth() {
+            return allCards[0].offsetWidth;
         }
 
-        const dots = document.querySelectorAll('.carousel-dot');
-
-        function updateCarousel() {
-            const cardWidth = cards[0].offsetWidth;
-            const gap = 35;
-            const offset = currentIndex * (cardsPerView * (cardWidth + gap));
-            carousel.style.transform = `translateX(-${offset}px)`;
-
-            dots.forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentIndex);
-            });
+        function getGap() {
+            return 35;
         }
 
-        function goToPage(index) {
-            currentIndex = index;
-            updateCarousel();
+        function setPositionByIndex(animated = true) {
+            const cardWidth = getCardWidth();
+            const gap = getGap();
+            currentTranslate = -currentIndex * (cardWidth + gap);
+            carousel.style.transition = animated ? 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none';
+            carousel.style.transform = `translateX(${currentTranslate}px)`;
+            prevTranslate = currentTranslate;
         }
 
-        prevBtn.addEventListener('click', () => {
-            currentIndex = currentIndex > 0 ? currentIndex - 1 : totalPages - 1;
-            updateCarousel();
-        });
+        function handleTransitionEnd() {
+            if (!isTransitioning) return;
 
-        nextBtn.addEventListener('click', () => {
-            currentIndex = currentIndex < totalPages - 1 ? currentIndex + 1 : 0;
-            updateCarousel();
-        });
+            // After transition completes, check if we need to loop
+            // We have 3 sets: [clones 0-7][originals 8-15][clones 16-23]
+            // We want to stay in the middle set (8-15)
+
+            if (currentIndex >= totalOriginalCards * 2) {
+                // Scrolled right into clone set (16+), wrap back to middle set
+                // Example: index 16 -> 8, index 17 -> 9, etc.
+                currentIndex = currentIndex - totalOriginalCards;
+                carousel.style.transition = 'none';
+                const cardWidth = getCardWidth();
+                const gap = getGap();
+                currentTranslate = -currentIndex * (cardWidth + gap);
+                carousel.style.transform = `translateX(${currentTranslate}px)`;
+                prevTranslate = currentTranslate;
+                // Force reflow
+                void carousel.offsetHeight;
+            } else if (currentIndex < totalOriginalCards) {
+                // Scrolled left into clone set (0-7), wrap forward to middle set
+                // Example: index 7 -> 15, index 6 -> 14, etc.
+                currentIndex = currentIndex + totalOriginalCards;
+                carousel.style.transition = 'none';
+                const cardWidth = getCardWidth();
+                const gap = getGap();
+                currentTranslate = -currentIndex * (cardWidth + gap);
+                carousel.style.transform = `translateX(${currentTranslate}px)`;
+                prevTranslate = currentTranslate;
+                // Force reflow
+                void carousel.offsetHeight;
+            }
+
+            isTransitioning = false;
+        }
+
+        carousel.addEventListener('transitionend', handleTransitionEnd);
+
+        function setCarouselPosition() {
+            carousel.style.transform = `translateX(${currentTranslate}px)`;
+        }
+
+        function touchStart(event) {
+            isDragging = true;
+            startX = getPositionX(event);
+            animationID = requestAnimationFrame(animation);
+            carouselContainer.style.cursor = 'grabbing';
+            carousel.style.transition = 'none';
+        }
+
+        function touchMove(event) {
+            if (isDragging) {
+                const currentPosition = getPositionX(event);
+                currentTranslate = prevTranslate + currentPosition - startX;
+            }
+        }
+
+        function touchEnd() {
+            isDragging = false;
+            cancelAnimationFrame(animationID);
+            carouselContainer.style.cursor = 'grab';
+
+            const movedBy = currentTranslate - prevTranslate;
+
+            // Swipe threshold - move one card at a time
+            if (movedBy < -100) {
+                currentIndex += 1;
+                isTransitioning = true;
+            } else if (movedBy > 100) {
+                currentIndex -= 1;
+                isTransitioning = true;
+            }
+
+            setPositionByIndex(true);
+        }
+
+        function getPositionX(event) {
+            return event.type.includes('mouse') ? event.pageX : event.touches[0].clientX;
+        }
+
+        function animation() {
+            setCarouselPosition();
+            if (isDragging) requestAnimationFrame(animation);
+        }
+
+        // Initialize position
+        setPositionByIndex(false);
+
+        // Mouse events
+        carouselContainer.addEventListener('mousedown', touchStart);
+        carouselContainer.addEventListener('mousemove', touchMove);
+        carouselContainer.addEventListener('mouseup', touchEnd);
+        carouselContainer.addEventListener('mouseleave', touchEnd);
+
+        // Touch events
+        carouselContainer.addEventListener('touchstart', touchStart);
+        carouselContainer.addEventListener('touchmove', touchMove);
+        carouselContainer.addEventListener('touchend', touchEnd);
+
+        // Prevent context menu on long press
+        carouselContainer.addEventListener('contextmenu', e => e.preventDefault());
+
+        // Trackpad/Mouse wheel scrolling - only intercept horizontal scrolls
+        let scrollTimeout;
+        let scrollAccumulator = 0;
+
+        carouselContainer.addEventListener('wheel', (e) => {
+            const isHorizontalScroll = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+
+            // Only prevent default and handle if it's a horizontal scroll
+            if (isHorizontalScroll) {
+                e.preventDefault();
+
+                // Ignore scroll events while transitioning
+                if (isTransitioning) {
+                    return;
+                }
+
+                // Accumulate horizontal scroll
+                scrollAccumulator += e.deltaX;
+
+                clearTimeout(scrollTimeout);
+
+                scrollTimeout = setTimeout(() => {
+                    // Determine direction based on accumulated scroll
+                    if (Math.abs(scrollAccumulator) > 50) {
+                        if (scrollAccumulator > 0) {
+                            currentIndex += 1;
+                            isTransitioning = true;
+                        } else {
+                            currentIndex -= 1;
+                            isTransitioning = true;
+                        }
+                        setPositionByIndex(true);
+                    }
+                    scrollAccumulator = 0;
+                }, 0);
+            }
+            // Otherwise let vertical scroll pass through normally
+        }, { passive: false });
 
         // Update on window resize
-        window.addEventListener('resize', updateCarousel);
+        window.addEventListener('resize', () => {
+            setPositionByIndex(false);
+        });
     </script>
 </body>
 </html>

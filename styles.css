@@ -44,7 +44,10 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--primary-color) 100%);
+    background-color: #24593a;
+    background-image: linear-gradient(135deg, transparent 0%, var(--primary-light) 50%, transparent 100%);
+    background-size: 150% 150%;
+    background-position: center;
     color: var(--text-light);
     padding: 80px 20px 140px;
     text-align: center;
@@ -62,29 +65,65 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.05) 0%,
-        rgba(255, 255, 255, 0.1) 25%,
-        rgba(255, 255, 255, 0.05) 50%,
-        rgba(255, 255, 255, 0.1) 75%,
-        rgba(255, 255, 255, 0.05) 100%
-    );
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-    opacity: 0.4;
+    background:
+        radial-gradient(
+            ellipse 900px 600px at -25% 100%,
+            rgba(255, 255, 255, 0.12),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 900px 600px at 25% 100%,
+            rgba(255, 255, 255, 0.12),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 900px 600px at 75% 100%,
+            rgba(255, 255, 255, 0.12),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 900px 600px at 125% 100%,
+            rgba(255, 255, 255, 0.12),
+            transparent 70%
+        );
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    animation: gradientMove 12s linear infinite;
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     right: 0;
-    height: 100px;
-    background: linear-gradient(to bottom, transparent, var(--bg-white));
-    z-index: 1;
+    bottom: 0;
+    background:
+        radial-gradient(
+            ellipse 800px 500px at -25% 0%,
+            rgba(255, 255, 255, 0.10),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 800px 500px at 25% 0%,
+            rgba(255, 255, 255, 0.10),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 800px 500px at 75% 0%,
+            rgba(255, 255, 255, 0.10),
+            transparent 70%
+        ),
+        radial-gradient(
+            ellipse 800px 500px at 125% 0%,
+            rgba(255, 255, 255, 0.10),
+            transparent 70%
+        );
+    background-size: 200% 100%;
+    background-position: 0% 0%;
+    animation: gradientMoveSlow 18s linear infinite;
 }
+
 
 .hero .container {
     position: relative;
@@ -113,27 +152,16 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.15);
-    padding: 12px 32px;
-    border-radius: 50px;
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: none;
 }
 
 .globe-icon {
     font-size: 1.8rem;
     display: inline-block;
-    animation: spin 20s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
 }
 
 .hero-description {
@@ -270,80 +298,33 @@ body {
 .carousel-container {
     position: relative;
     margin-top: 50px;
-    padding: 0 60px;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+    padding: 40px 0;
+    cursor: grab;
+}
+
+.carousel-container:active {
+    cursor: grabbing;
 }
 
 .project-carousel {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 35px;
-    overflow: hidden;
+    padding: 0 calc((100vw - 1200px) / 2);
     transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.project-carousel .project-card {
+    flex: 0 0 calc((1200px - 70px) / 3);
+    min-width: calc((1200px - 70px) / 3);
+}
+
 .carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: var(--bg-white);
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 2rem;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
+    display: none;
 }
 
-.carousel-btn:hover {
-    background: var(--primary-color);
-    color: var(--text-light);
-    box-shadow: var(--shadow);
-    transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-btn.prev {
-    left: 0;
-}
-
-.carousel-btn.next {
-    right: 0;
-}
-
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    gap: 12px;
-    margin-top: 40px;
-}
-
-.carousel-dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: #ccc;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-    padding: 0;
-}
-
-.carousel-dot.active {
-    background: var(--primary-color);
-    width: 32px;
-    border-radius: 6px;
-}
-
-.carousel-dot:hover {
-    background: var(--primary-light);
-}
 
 .project-card {
     background: var(--bg-white);
@@ -559,26 +540,33 @@ footer p {
     }
 }
 
-@keyframes gradientShift {
+@keyframes gradientMove {
     0% {
         background-position: 0% 50%;
     }
-    50% {
-        background-position: 100% 50%;
+    100% {
+        background-position: 200% 50%;
+    }
+}
+
+@keyframes gradientMoveSlow {
+    0% {
+        background-position: 0% 50%;
     }
     100% {
-        background-position: 0% 50%;
+        background-position: 200% 50%;
     }
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
     .project-carousel {
-        grid-template-columns: repeat(2, 1fr);
+        padding: 0 calc((100vw - 750px) / 2);
     }
 
-    .carousel-container {
-        padding: 0 50px;
+    .project-carousel .project-card {
+        flex: 0 0 calc((750px - 35px) / 2);
+        min-width: calc((750px - 35px) / 2);
     }
 }
 
@@ -621,18 +609,12 @@ footer p {
     }
 
     .project-carousel {
-        grid-template-columns: 1fr;
-        gap: 30px;
+        padding: 0 calc((100vw - 350px) / 2);
     }
 
-    .carousel-container {
-        padding: 0 40px;
-    }
-
-    .carousel-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 1.5rem;
+    .project-carousel .project-card {
+        flex: 0 0 350px;
+        min-width: 350px;
     }
 
     .meeting-detail {
