@@ -9,10 +9,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="impact-animation.js" defer></script>
 </head>
 <body>
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-background"></div>
         <div class="container">
             <h1 class="hero-title">Animal Rights Entrepreneurs</h1>
             <p class="hero-subtitle">
@@ -21,7 +23,7 @@
                     The Seattle Chapter
                 </span>
             </p>
-            <p class="hero-description">A community of innovators working to advance animal welfare through technology, outreach, and social change.</p>
+            <p class="hero-description">A community of friends and innovators working to advance animal welfare through technology, outreach, and social change.</p>
             <a href="#join" class="cta-button">Join Our Community</a>
         </div>
     </section>
@@ -31,6 +33,24 @@
         <div class="container">
             <h2>Who We Are</h2>
             <p>We're a diverse group of entrepreneurs, technologists, and advocates united by a common goal: creating meaningful impact for animals. Our members work on innovative projects that span technology, science, and social activism.</p>
+        </div>
+    </section>
+
+    <!-- Impact Section -->
+    <section class="impact">
+        <div class="container">
+            <h2>What We've Done</h2>
+            <p class="impact-description">Collectively, we've started to make a difference</p>
+            <div class="impact-metrics">
+                <div class="impact-metric">
+                    <span class="impact-number" data-target="3800">2000</span>
+                    <span class="impact-label">Dollars Raised in Funds</span>
+                </div>
+                <div class="impact-metric">
+                    <span class="impact-number" data-target="121000">120000</span>
+                    <span class="impact-label">People Reached</span>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -90,6 +110,7 @@
         <div class="container">
             <h2>Join Our Meetings</h2>
             <div class="meeting-info">
+		<a href="">
                 <div class="meeting-detail">
                     <span class="meeting-icon">📅</span>
                     <div>
@@ -97,6 +118,7 @@
                         <p>6:30 PM Pacific Time</p>
                     </div>
                 </div>
+		</a>
                 <p class="meeting-description">Connect with fellow entrepreneurs, share ideas, collaborate on projects, and build the future of animal advocacy together.</p>
             </div>
         </div>
@@ -106,9 +128,8 @@
     <section class="cta" id="join">
         <div class="container">
             <h2>Ready to Make an Impact?</h2>
-            <p>Join our Slack community to connect with members, stay updated on meetings, and collaborate on projects.</p>
-            <a href="#" class="cta-button primary" onclick="alert('Please replace this link with your actual Slack invite URL'); return false;">Join Our Slack</a>
-            <p class="cta-note">Replace the link above with your Slack invite URL</p>
+            <p>Join our Discord community to connect with members, stay updated on meetings, and collaborate on projects.</p>
+            <a href="#" class="cta-button primary" onclick="alert('Please replace this link with your actual Slack invite URL'); return false;">Join Our Discord</a>
         </div>
     </section>
 
