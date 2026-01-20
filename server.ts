@@ -29,10 +29,36 @@ async function handleApi(_req: Request, pathname: string): Promise<Response> {
 
   // GET /api/impact
   if (pathname === "/api/impact") {
+    type MetricsResponse = {
+      latest_project_metrics_aggregate: {
+        aggregate: {
+          sum: {
+            total_views: number | null;
+          };
+        };
+      };
+    };
+
+    const result = await graphql<MetricsResponse>(
+      `query GetImpactMetrics {
+        latest_project_metrics_aggregate {
+          aggregate {
+            sum {
+              total_views
+            }
+          }
+        }
+      }`,
+      { useAdminSecret: true }
+    );
+
+    const totalViews =
+      result.data?.latest_project_metrics_aggregate?.aggregate?.sum?.total_views ?? 200000;
+
     return Response.json({
       metrics: {
         dollarsRaised: 3800,
-        peopleReached: 121000,
+        peopleReached: totalViews,
       },
     });
   }
@@ -61,7 +87,7 @@ async function handleApi(_req: Request, pathname: string): Promise<Response> {
     );
 
     if (result.errors && result.errors.length > 0) {
-      return Response.json({ error: result.errors[0].message }, { status: 500 });
+      return Response.json({ error: result.errors[0]?.message }, { status: 500 });
     }
 
     return Response.json({ projects: result.data?.projects ?? [] });

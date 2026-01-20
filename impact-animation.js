@@ -1,7 +1,7 @@
 // Number rollup animation for impact metrics
 function animateNumber(element, target, duration = 1000) {
-    const start = parseInt(element.textContent) || 0;
-    const startValue = Math.max(0, target - 1000);
+    // Start from 90% of target for a smooth count-up
+    const startValue = Math.floor(target * 0.9);
     const increment = (target - startValue) / (duration / 16);
     let current = startValue;
     
@@ -35,10 +35,29 @@ const impactObserver = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-// Start observing the impact section when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+// Fetch impact metrics and update targets, then start observing
+document.addEventListener('DOMContentLoaded', async () => {
     const impactSection = document.querySelector('.impact');
-    if (impactSection) {
-        impactObserver.observe(impactSection);
+    if (!impactSection) return;
+
+    // Fetch dynamic metrics from API
+    try {
+        const response = await fetch('/api/impact');
+        const data = await response.json();
+
+        // Update data-target attributes with fetched values
+        const impactNumbers = impactSection.querySelectorAll('.impact-number');
+        impactNumbers.forEach(el => {
+            const label = el.nextElementSibling?.textContent?.toLowerCase() || '';
+            if (label.includes('dollars') && data.metrics?.dollarsRaised) {
+                el.setAttribute('data-target', data.metrics.dollarsRaised);
+            } else if (label.includes('people') && data.metrics?.peopleReached) {
+                el.setAttribute('data-target', data.metrics.peopleReached);
+            }
+        });
+    } catch (err) {
+        console.warn('Failed to fetch impact metrics, using defaults:', err);
     }
+
+    impactObserver.observe(impactSection);
 });
