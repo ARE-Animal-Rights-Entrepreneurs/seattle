@@ -1,5 +1,6 @@
 {
   "name": "are-seattle",
+  "type": "module",
   "private": true,
   "scripts": {
     "dev": "bun --hot run server.ts",
