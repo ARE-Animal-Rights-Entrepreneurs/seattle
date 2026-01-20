@@ -1,11 +1,14 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono/bun";
-import { graphql, nhost } from "./lib/nhost";
+import { handle } from "hono/vercel";
+import { graphql, nhost } from "../lib/nhost";
 
-const app = new Hono();
+export const config = {
+  runtime: "edge",
+};
 
-// API routes
-app.get("/api/health", (c) => {
+const app = new Hono().basePath("/api");
+
+app.get("/health", (c) => {
   return c.json({
     status: "ok",
     timestamp: new Date().toISOString(),
@@ -13,7 +16,7 @@ app.get("/api/health", (c) => {
   });
 });
 
-app.get("/api/impact", async (c) => {
+app.get("/impact", async (c) => {
   type MetricsResponse = {
     latest_project_metrics_aggregate: {
       aggregate: {
@@ -48,7 +51,7 @@ app.get("/api/impact", async (c) => {
   });
 });
 
-app.get("/api/projects", async (c) => {
+app.get("/projects", async (c) => {
   type ProjectsResponse = {
     projects: Array<{
       project_handle: string;
@@ -77,19 +80,9 @@ app.get("/api/projects", async (c) => {
   return c.json({ projects: result.data?.projects ?? [] });
 });
 
-app.get("/api/graphql-test", async (c) => {
+app.get("/graphql-test", async (c) => {
   const result = await graphql(`query { __typename }`, { useAdminSecret: true });
   return c.json(result);
 });
 
-// Static file serving for local dev
-app.use("/*", serveStatic({ root: "./" }));
-app.use("/*", serveStatic({ path: "./index.html" }));
-
-const port = process.env.PORT || 3001;
-console.log(`Server running at http://localhost:${port}`);
-
-export default {
-  port,
-  fetch: app.fetch,
-};
+export default handle(app);

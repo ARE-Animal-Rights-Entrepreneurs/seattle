@@ -6,6 +6,8 @@ A mostly static web application for Animal Rights Entrepreneurs Seattle chapter,
 
 ### Runtime & Server
 - **[Bun](https://bun.sh/)** - JavaScript runtime, package manager, and bundler
+- **[Hono](https://hono.dev/)** - Lightweight web framework for edge and serverless
+- **[Vercel](https://vercel.com/)** - Deployment platform (Edge Functions)
 - **TypeScript** - Type-safe JavaScript with strict mode enabled
 
 ### Backend & Database
@@ -30,7 +32,10 @@ are-seattle/
 ├── index.html              # Landing page
 ├── styles.css              # Landing page styles
 ├── impact-animation.js     # Client-side animations
-├── server.ts               # Bun web server
+├── server.ts               # Local dev server (Hono + Bun)
+├── vercel.json             # Vercel deployment config
+├── api/
+│   └── [[...route]].ts     # Vercel Edge API routes (Hono)
 ├── lib/
 │   └── nhost.ts            # Nhost GraphQL client
 ├── functions/              # Nhost serverless functions
@@ -103,7 +108,20 @@ The metrics system tracks social media analytics across multiple platforms:
 
 ## Deployment
 
-The backend is hosted on **Nhost**, which provides managed PostgreSQL, Hasura GraphQL, authentication, and serverless functions. The Bun server handles HTTP requests and serves the landing page.
+### Vercel (Frontend + API)
+
+The app is deployed to **Vercel** with Edge Functions for API routes:
+
+1. Connect your repo to Vercel
+2. Set environment variables in Vercel Dashboard:
+   - `NHOST_SUBDOMAIN`
+   - `NHOST_REGION`
+   - `NHOST_GRAPHQL_SECRET`
+3. Deploy - Vercel auto-detects the config from `vercel.json`
+
+### Nhost (Database)
+
+The backend database is hosted on **Nhost**, providing managed PostgreSQL and Hasura GraphQL.
 
 ## Customization
 
