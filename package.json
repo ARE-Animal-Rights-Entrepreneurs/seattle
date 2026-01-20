@@ -1,19 +1,19 @@
 {
   "name": "are-seattle",
-  "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun --hot run server.ts",
-    "start": "bun run server.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
-    "discord.js": "^14.25.1",
-    "hono": "^4.11.4"
+    "next": "^14",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "typescript": "^5"
   }
 }

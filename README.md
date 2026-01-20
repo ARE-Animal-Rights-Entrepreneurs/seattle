@@ -5,9 +5,8 @@ A mostly static web application for Animal Rights Entrepreneurs Seattle chapter,
 ## Tech Stack
 
 ### Runtime & Server
-- **[Bun](https://bun.sh/)** - JavaScript runtime, package manager, and bundler
-- **[Hono](https://hono.dev/)** - Lightweight web framework for edge and serverless
-- **[Vercel](https://vercel.com/)** - Deployment platform (Edge Functions)
+- **[Next.js](https://nextjs.org/)** - React framework with API routes
+- **[Vercel](https://vercel.com/)** - Deployment platform
 - **TypeScript** - Type-safe JavaScript with strict mode enabled
 
 ### Backend & Database
@@ -19,7 +18,7 @@ A mostly static web application for Animal Rights Entrepreneurs Seattle chapter,
   - **Functions** - Serverless functions
 
 ### Frontend
-- **HTML/CSS/JS** - Static landing page with no build step required
+- **HTML/CSS/JS** - Static landing page served from `public/`
 - **Responsive design** - CSS Grid and Flexbox
 
 ### Integrations
@@ -29,15 +28,18 @@ A mostly static web application for Animal Rights Entrepreneurs Seattle chapter,
 
 ```
 are-seattle/
-├── index.html              # Landing page
-├── styles.css              # Landing page styles
-├── impact-animation.js     # Client-side animations
-├── server.ts               # Local dev server (Hono + Bun)
-├── vercel.json             # Vercel deployment config
-├── api/
-│   └── [[...route]].ts     # Vercel Edge API routes (Hono)
-├── lib/
-│   └── nhost.ts            # Nhost GraphQL client
+├── public/
+│   ├── index.html          # Landing page
+│   ├── styles.css          # Landing page styles
+│   ├── impact-animation.js # Client-side animations
+│   └── assets/             # Images and media
+├── app/
+│   ├── layout.tsx          # Next.js root layout
+│   ├── page.tsx            # Redirects to index.html
+│   └── api/
+│       ├── health/route.ts # Health check endpoint
+│       ├── impact/route.ts # Impact metrics endpoint
+│       └── projects/route.ts # Projects endpoint
 ├── functions/              # Nhost serverless functions
 ├── nhost/
 │   ├── nhost.toml          # Nhost configuration
@@ -51,7 +53,7 @@ are-seattle/
 ## Getting Started
 
 ### Prerequisites
-- [Bun](https://bun.sh/) installed
+- Node.js 18+ or Bun
 - [Nhost CLI](https://docs.nhost.io/development/cli) for local development
 - Docker (for running local Nhost stack)
 
@@ -59,11 +61,13 @@ are-seattle/
 
 ```bash
 # Install dependencies
+npm install
+# or
 bun install
 
 # Copy environment variables
 cp .env.example .env
-# Edit .env with your Nhost and Discord credentials
+# Edit .env with your Nhost credentials
 ```
 
 ### Local Development
@@ -72,11 +76,13 @@ cp .env.example .env
 # Start the Nhost local development stack
 nhost up
 
-# Run the server with hot reloading
-bun --hot run server.ts
+# Run the Next.js dev server
+npm run dev
+# or
+bun run dev
 ```
 
-The server runs on `http://localhost:3001` by default.
+The server runs on `http://localhost:3000` by default.
 
 ### Environment Variables
 
@@ -87,37 +93,28 @@ The server runs on `http://localhost:3001` by default.
 | `NHOST_GRAPHQL_SECRET` | Hasura admin secret |
 | `DISCORD_TOKEN` | Discord bot token |
 | `DISCORD_CLIENT_ID` | Discord application client ID |
-| `PORT` | Server port (default: 3001) |
 
 ## API Endpoints
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /` | Landing page |
+| `GET /` | Landing page (static HTML) |
 | `GET /api/health` | Health check |
 | `GET /api/impact` | Impact metrics |
-| `GET /api/graphql-test` | GraphQL connectivity test |
-
-## Database Schema
-
-The metrics system tracks social media analytics across multiple platforms:
-
-- **projects** - ARE Seattle initiatives and their metadata
-- **account_snapshots** - Per-platform metrics (followers, views, likes, etc.)
-- **project_snapshots** - Aggregated project-level metrics
+| `GET /api/projects` | Projects list |
 
 ## Deployment
 
-### Vercel (Frontend + API)
+### Vercel
 
-The app is deployed to **Vercel** with Edge Functions for API routes:
+The app is deployed to **Vercel** with Next.js:
 
 1. Connect your repo to Vercel
 2. Set environment variables in Vercel Dashboard:
    - `NHOST_SUBDOMAIN`
    - `NHOST_REGION`
    - `NHOST_GRAPHQL_SECRET`
-3. Deploy - Vercel auto-detects the config from `vercel.json`
+3. Deploy - Vercel auto-detects Next.js
 
 ### Nhost (Database)
 
@@ -126,7 +123,7 @@ The backend database is hosted on **Nhost**, providing managed PostgreSQL and Ha
 ## Customization
 
 ### Colors
-Edit CSS variables in `styles.css` to change the color scheme:
+Edit CSS variables in `public/styles.css` to change the color scheme:
 ```css
 :root {
     --primary-color: #2d5a3d;  /* Main green */
@@ -135,7 +132,7 @@ Edit CSS variables in `styles.css` to change the color scheme:
 ```
 
 ### Content
-All landing page content is in `index.html`. Edit the text in each section to customize.
+All landing page content is in `public/index.html`. Edit the text in each section to customize.
 
 ## License
 
