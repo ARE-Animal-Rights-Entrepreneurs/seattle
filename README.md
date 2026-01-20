@@ -1,98 +1,124 @@
-# Animal Rights Entrepreneurs Seattle - Landing Page
+# ARE Seattle
 
-A modern, responsive landing page for the Animal Rights Entrepreneurs community in Seattle.
+A web application for Animal Rights Entrepreneurs Seattle chapter, featuring a landing page, metrics tracking system, and Discord bot integration.
 
-## Features
+## Tech Stack
 
-- Clean, professional design
-- Fully responsive (mobile, tablet, desktop)
-- Information about the group and projects
-- Meeting details
-- Call-to-action for Slack community
-- Smooth scrolling animations
-- Zero dependencies
+### Runtime & Server
+- **[Bun](https://bun.sh/)** - JavaScript runtime, package manager, and bundler
+- **TypeScript** - Type-safe JavaScript with strict mode enabled
 
-## Setup
+### Backend & Database
+- **[Nhost](https://nhost.io/)** - Backend-as-a-Service platform providing:
+  - **PostgreSQL** - Primary database
+  - **Hasura** - GraphQL API layer with real-time subscriptions
+  - **Auth** - Authentication service
+  - **Storage** - S3-compatible file storage (MinIO)
+  - **Functions** - Serverless functions
 
-### Important: Update Slack Link
+### Frontend
+- **HTML/CSS/JS** - Static landing page with no build step required
+- **Responsive design** - CSS Grid and Flexbox
 
-Before deploying, update the Slack invite URL in `index.html`:
+### Integrations
+- **Discord.js** - Bot for serving community statistics via slash commands
 
-1. Open `index.html`
-2. Find the "Join Our Slack" button (around line 72)
-3. Replace the `#` in `href="#"` with your actual Slack invite URL
-4. Remove or update the `onclick` alert and `cta-note` paragraph
+## Project Structure
 
-Example:
-```html
-<a href="https://join.slack.com/t/your-workspace/..." class="cta-button primary">Join Our Slack</a>
+```
+are-seattle/
+├── index.html              # Landing page
+├── styles.css              # Landing page styles
+├── impact-animation.js     # Client-side animations
+├── server.ts               # Bun web server
+├── lib/
+│   └── nhost.ts            # Nhost GraphQL client
+├── functions/              # Nhost serverless functions
+├── nhost/
+│   ├── nhost.toml          # Nhost configuration
+│   ├── migrations/         # Database migrations
+│   ├── metadata/           # Hasura metadata
+│   └── seeds/              # Database seeds
+└── docs/
+    └── plans/              # Design documents
 ```
 
-## Deployment Options
+## Getting Started
 
-### Option 1: GitHub Pages (Recommended)
+### Prerequisites
+- [Bun](https://bun.sh/) installed
+- [Nhost CLI](https://docs.nhost.io/development/cli) for local development
+- Docker (for running local Nhost stack)
 
-1. Create a new repository on GitHub
-2. Push your code:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin https://github.com/yourusername/are-seattle.git
-   git push -u origin main
-   ```
-3. Go to repository Settings → Pages
-4. Select "main" branch as source
-5. Your site will be live at `https://yourusername.github.io/are-seattle/`
+### Installation
 
-### Option 2: Netlify
+```bash
+# Install dependencies
+bun install
 
-1. Sign up at [netlify.com](https://netlify.com)
-2. Drag and drop your project folder to Netlify dashboard
-3. Your site will be live instantly with a custom URL
-4. Optional: Add a custom domain in site settings
+# Copy environment variables
+cp .env.example .env
+# Edit .env with your Nhost and Discord credentials
+```
 
-### Option 3: Vercel
+### Local Development
 
-1. Sign up at [vercel.com](https://vercel.com)
-2. Install Vercel CLI: `npm i -g vercel`
-3. Run `vercel` in your project directory
-4. Follow the prompts to deploy
+```bash
+# Start the Nhost local development stack
+nhost up
 
-### Option 4: Surge
+# Run the server with hot reloading
+bun --hot run server.ts
+```
 
-1. Install Surge: `npm install -g surge`
-2. Run `surge` in your project directory
-3. Follow the prompts to deploy
-4. Your site will be live at `projectname.surge.sh`
+The server runs on `http://localhost:3001` by default.
 
-## Local Development
+### Environment Variables
 
-Simply open `index.html` in your browser to preview locally. No build process required!
+| Variable | Description |
+|----------|-------------|
+| `NHOST_SUBDOMAIN` | Your Nhost project subdomain |
+| `NHOST_REGION` | Nhost region (e.g., `us-west-2`) |
+| `NHOST_GRAPHQL_SECRET` | Hasura admin secret |
+| `DISCORD_TOKEN` | Discord bot token |
+| `DISCORD_CLIENT_ID` | Discord application client ID |
+| `PORT` | Server port (default: 3001) |
+
+## API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /` | Landing page |
+| `GET /api/health` | Health check |
+| `GET /api/impact` | Impact metrics |
+| `GET /api/graphql-test` | GraphQL connectivity test |
+
+## Database Schema
+
+The metrics system tracks social media analytics across multiple platforms:
+
+- **projects** - ARE Seattle initiatives and their metadata
+- **account_snapshots** - Per-platform metrics (followers, views, likes, etc.)
+- **project_snapshots** - Aggregated project-level metrics
+
+## Deployment
+
+The backend is hosted on **Nhost**, which provides managed PostgreSQL, Hasura GraphQL, authentication, and serverless functions. The Bun server handles HTTP requests and serves the landing page.
 
 ## Customization
 
 ### Colors
-Edit CSS variables in `styles.css` (lines 9-17) to change the color scheme:
+Edit CSS variables in `styles.css` to change the color scheme:
 ```css
 :root {
     --primary-color: #2d5a3d;  /* Main green */
     --accent-color: #f4a261;   /* Orange accent */
-    /* ... */
 }
 ```
 
 ### Content
-All content is in `index.html`. Simply edit the text in each section to customize.
-
-### Projects
-Add or modify project cards in the "Projects Section" of `index.html` (around lines 34-50).
+All landing page content is in `index.html`. Edit the text in each section to customize.
 
 ## License
 
-Feel free to modify and use this template for your organization.
-
-## Support
-
-For questions or issues, contact the Animal Rights Entrepreneurs Seattle team.
+Private - ARE Seattle

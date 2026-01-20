@@ -37,7 +37,36 @@ async function handleApi(_req: Request, pathname: string): Promise<Response> {
     });
   }
 
-  // Example: GraphQL query to nhost (with admin secret)
+  // GET /api/projects
+  if (pathname === "/api/projects") {
+    type ProjectsResponse = {
+      projects: Array<{
+        project_handle: string;
+        project_name: string | null;
+        project_website: string | null;
+        project_description: string | null;
+      }>;
+    };
+
+    const result = await graphql<ProjectsResponse>(
+      `query GetProjects {
+        projects(order_by: { project_handle: asc }) {
+          project_handle
+          project_name
+          project_website
+          project_description
+        }
+      }`,
+      { useAdminSecret: true }
+    );
+
+    if (result.errors && result.errors.length > 0) {
+      return Response.json({ error: result.errors[0].message }, { status: 500 });
+    }
+
+    return Response.json({ projects: result.data?.projects ?? [] });
+  }
+
   // GET /api/graphql-test
   if (pathname === "/api/graphql-test") {
     const result = await graphql(
@@ -46,8 +75,6 @@ async function handleApi(_req: Request, pathname: string): Promise<Response> {
     );
     return Response.json(result);
   }
-
-  // Add more API routes here...
 
   return Response.json({ error: "Not found" }, { status: 404 });
 }

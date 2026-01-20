@@ -74,70 +74,11 @@
       <div class="carousel-container">
         <button class="carousel-nav prev" aria-label="Previous projects">←</button>
         <button class="carousel-nav next" aria-label="Next projects">→</button>
-        <div class="project-carousel">
-          <div class="project-card">
-            <div class="project-icon">📱</div>
-            <h3>Social Media Outreach</h3>
-            <p>
-              Amplifying animal welfare messages and reaching new audiences
-              through strategic digital campaigns.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">🧬</div>
-            <h3>Precision Fermentation</h3>
-            <p>
-              Developing animal-free whey through cutting-edge biotechnology to
-              create sustainable alternatives.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">🌐</div>
-            <h3>Movement Building Platforms</h3>
-            <p>
-              Creating web platforms that connect people to social movements and
-              drive collective action.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">🎓</div>
-            <h3>Educational Resources</h3>
-            <p>
-              Building comprehensive learning materials to educate the public
-              about animal welfare and ethical choices.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">🤝</div>
-            <h3>Community Partnerships</h3>
-            <p>
-              Collaborating with local organizations and businesses to expand
-              our impact and reach.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">📊</div>
-            <h3>Impact Analytics</h3>
-            <p>
-              Developing data-driven tools to measure and optimize the
-              effectiveness of animal advocacy campaigns.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">🎨</div>
-            <h3>Creative Campaigns</h3>
-            <p>
-              Designing compelling visual and multimedia content to inspire
-              action for animal rights.
-            </p>
-          </div>
-          <div class="project-card">
-            <div class="project-icon">💡</div>
-            <h3>Innovation Labs</h3>
-            <p>
-              Experimenting with emerging technologies to find new solutions for
-              animal welfare challenges.
-            </p>
+        <div class="project-carousel" id="project-carousel">
+          <div class="project-card loading">
+            <div class="project-icon">⏳</div>
+            <h3>Loading projects...</h3>
+            <p>Fetching project data from the server.</p>
           </div>
         </div>
       </div>
@@ -210,7 +151,94 @@
         });
       });
 
+      // Icon mapping for projects
+      const projectIcons = {
+        'chicken-nor-egg': '🐔',
+        'ahimsa-in-action': '🕊️',
+        'kind-state': '🎬',
+        'clean-meat-alliance': '🧬',
+        'feeding-progress': '📝',
+        'vishnus-thoughts': '💭',
+        'viniths-thoughts': '📖',
+        'coffee-buddy': '☕',
+        'just-another-day-at-work': '🏢',
+      };
+
+      // Fallback: convert handle to display name (e.g., "chicken-nor-egg" -> "Chicken Nor Egg")
+      function formatProjectName(handle) {
+        return handle
+          .split('-')
+          .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ');
+      }
+
+      // Fetch and render projects
+      async function loadProjects() {
+        const carousel = document.getElementById('project-carousel');
+
+        try {
+          const response = await fetch('/api/projects');
+          const data = await response.json();
+
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          if (!data.projects || data.projects.length === 0) {
+            carousel.innerHTML = `
+              <div class="project-card">
+                <div class="project-icon">📭</div>
+                <h3>No Projects Yet</h3>
+                <p>Check back soon for our upcoming initiatives.</p>
+              </div>
+            `;
+            return;
+          }
+
+          // Render project cards
+          carousel.innerHTML = data.projects.map(project => {
+            const icon = projectIcons[project.project_handle] || '🌱';
+            const name = project.project_name || formatProjectName(project.project_handle);
+            const description = project.project_description || 'An ARE Seattle initiative.';
+            const website = project.project_website;
+
+            const content = `
+              <div class="project-icon">${icon}</div>
+              <h3>${name}</h3>
+              <p>${description}</p>
+            `;
+
+            if (website) {
+              return `
+                <div class="project-card">
+                  <a href="${website}" target="_blank" rel="noopener">${content}</a>
+                </div>
+              `;
+            }
+
+            return `<div class="project-card">${content}</div>`;
+          }).join('');
+
+          // Initialize carousel after projects are loaded
+          initCarousel();
+
+        } catch (error) {
+          console.error('Failed to load projects:', error);
+          carousel.innerHTML = `
+            <div class="project-card">
+              <div class="project-icon">⚠️</div>
+              <h3>Unable to Load Projects</h3>
+              <p>Please try refreshing the page.</p>
+            </div>
+          `;
+        }
+      }
+
+      // Load projects on page load
+      loadProjects();
+
       // Project Carousel - Infinite Loop with 3 Cards Visible
+      function initCarousel() {
       const carouselContainer = document.querySelector(".carousel-container");
       const carousel = document.querySelector(".project-carousel");
       const originalCards = Array.from(
@@ -431,6 +459,7 @@
         isTransitioning = true;
         setPositionByIndex(true);
       });
+      } // end initCarousel
     </script>
   </body>
 </html>
