@@ -1,6 +1,6 @@
 # ARE Seattle
 
-A web application for Animal Rights Entrepreneurs Seattle chapter, featuring a landing page, metrics tracking system, and Discord bot integration.
+A mostly static web application for Animal Rights Entrepreneurs Seattle chapter, featuring a landing page, metrics tracking system, and Discord bot integration.
 
 ## Tech Stack
 
