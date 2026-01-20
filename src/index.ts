@@ -1,10 +1,5 @@
 import { Hono } from "hono";
-import { handle } from "hono/vercel";
 import { graphql, nhost } from "../lib/nhost";
-
-export const config = {
-  runtime: "edge",
-};
 
 const app = new Hono().basePath("/api");
 
@@ -85,4 +80,4 @@ app.get("/graphql-test", async (c) => {
   return c.json(result);
 });
 
-export default handle(app);
+export default app;

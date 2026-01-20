@@ -83,8 +83,8 @@ app.get("/api/graphql-test", async (c) => {
 });
 
 // Static file serving for local dev
-app.use("/*", serveStatic({ root: "./" }));
-app.use("/*", serveStatic({ path: "./index.html" }));
+app.use("/*", serveStatic({ root: "./public" }));
+app.use("/*", serveStatic({ path: "./public/index.html" }));
 
 const port = process.env.PORT || 3001;
 console.log(`Server running at http://localhost:${port}`);
