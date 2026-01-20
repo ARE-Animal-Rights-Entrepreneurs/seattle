@@ -1,0 +1,14 @@
+{
+  "name": "are-seattle",
+  "private": true,
+  "scripts": {
+    "dev": "bun --hot run server.ts",
+    "start": "bun run server.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
