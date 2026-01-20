@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { graphql, nhost } from "../lib/nhost";
+import { graphql, nhost } from "../lib/nhost.js";
 
 const app = new Hono().basePath("/api");
 
