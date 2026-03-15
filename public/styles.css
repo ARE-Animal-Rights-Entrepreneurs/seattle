@@ -650,6 +650,20 @@ footer p {
     font-weight: 300;
 }
 
+footer .contact-email {
+    margin-top: 12px;
+    font-size: 0.95rem;
+}
+
+footer .contact-email a {
+    color: var(--accent-light);
+    text-decoration: none;
+}
+
+footer .contact-email a:hover {
+    text-decoration: underline;
+}
+
 /* Animations */
 @keyframes fadeInUp {
     from {

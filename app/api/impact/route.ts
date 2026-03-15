@@ -41,7 +41,7 @@ export async function GET() {
 
   return NextResponse.json({
     metrics: {
-      dollarsRaised: 3800,
+      dollarsRaised: 4220,
       peopleReached: totalViews,
     },
   });

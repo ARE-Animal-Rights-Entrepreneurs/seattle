@@ -54,11 +54,11 @@
             <p class="impact-description">Collectively, we've started to make a difference</p>
             <div class="impact-metrics">
                 <div class="impact-metric">
-                    <span class="impact-number" data-target="3800">3400</span>
+                    <span class="impact-number" data-target="4220">4220</span>
                     <span class="impact-label">Dollars Raised in Funds</span>
                 </div>
                 <div class="impact-metric">
-                    <span class="impact-number" data-target="233000">233000</span>
+                    <span class="impact-number" data-target="200000">200000</span>
                     <span class="impact-label">People Reached</span>
                 </div>
             </div>
@@ -131,6 +131,9 @@
         <p>
           &copy; 2025 Animal Project Buddies Seattle. Building a better
           future for all animals.
+        </p>
+        <p class="contact-email">
+          Contact us: <a href="mailto:animalprojectbuddies@gmail.com">animalprojectbuddies@gmail.com</a>
         </p>
       </div>
     </footer>
@@ -302,8 +305,13 @@
           const setWidth = getSetWidth();
           const minOffset = -(totalOriginal * 2) * getStep();
           const originOffset = -totalOriginal * getStep();
-          if (scrollOffset < minOffset) scrollOffset += setWidth;
-          else if (scrollOffset > originOffset) scrollOffset -= setWidth;
+          let adjustment = 0;
+          if (scrollOffset < minOffset) adjustment = setWidth;
+          else if (scrollOffset > originOffset) adjustment = -setWidth;
+          if (adjustment !== 0) {
+            scrollOffset += adjustment;
+            if (slideTarget !== null) slideTarget += adjustment;
+          }
         }
 
         function applyPosition() {
