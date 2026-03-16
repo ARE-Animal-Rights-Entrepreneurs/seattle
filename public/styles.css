@@ -576,6 +576,11 @@ body {
     font-weight: 500;
 }
 
+.meeting-detail .meeting-location {
+    font-size: 0.95rem;
+    margin-top: 4px;
+}
+
 .meeting-description {
     font-size: 1.15rem;
     line-height: 1.8;
